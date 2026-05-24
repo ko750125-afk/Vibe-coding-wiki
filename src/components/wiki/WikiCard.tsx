@@ -1,7 +1,4 @@
-import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import type { WikiEntry } from '@/lib/types'
 
 import { cn } from '@/lib/utils'
