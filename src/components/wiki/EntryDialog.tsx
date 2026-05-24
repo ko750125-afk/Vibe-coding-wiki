@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Trash2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -17,22 +18,24 @@ interface EntryDialogProps {
   entry: WikiEntry | null
   userId: string
   entries: WikiEntry[]
+  onDelete: (id: string) => Promise<void>
 }
 
-export function EntryDialog({ open, onOpenChange, entry, userId, entries }: EntryDialogProps) {
+export function EntryDialog({ open, onOpenChange, entry, userId, entries, onDelete }: EntryDialogProps) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [parentId, setParentId] = useState<string>('')
   const [saving, setSaving] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
   useEffect(() => {
     if (open) {
       setTitle(entry?.title ?? '')
       setContent(entry?.content ?? '')
       setParentId(entry?.parentId ?? '')
-      // 기존 글이 있으면(entry != null) 보기 모드, 새 글이면(entry == null) 편집 모드
       setIsEditing(!entry)
+      setIsConfirmingDelete(false)
     }
   }, [open, entry])
 
@@ -112,7 +115,43 @@ export function EntryDialog({ open, onOpenChange, entry, userId, entries }: Entr
           {isEditing ? (
             <span className="text-xs text-muted-foreground">Ctrl+Enter로 저장</span>
           ) : (
-            <span />
+            <div>
+              {entry && (
+                isConfirmingDelete ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-destructive">정말 삭제할까요?</span>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={async () => {
+                        await onDelete(entry.id)
+                        setIsConfirmingDelete(false)
+                        onOpenChange(false)
+                      }}
+                    >
+                      확인
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setIsConfirmingDelete(false)}
+                    >
+                      취소
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
+                    onClick={() => setIsConfirmingDelete(true)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    삭제
+                  </Button>
+                )
+              )}
+            </div>
           )}
           <div className="flex gap-2">
             {!isEditing ? (

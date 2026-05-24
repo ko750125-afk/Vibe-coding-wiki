@@ -113,7 +113,6 @@ export function WikiPage() {
               key={entry.id}
               entry={entry}
               onClick={openEdit}
-              onDelete={handleDelete}
             />
           ))}
         </div>
@@ -125,6 +124,7 @@ export function WikiPage() {
         entry={editTarget}
         userId={user?.uid ?? ''}
         entries={entries}
+        onDelete={handleDelete}
       />
     </div>
   )
