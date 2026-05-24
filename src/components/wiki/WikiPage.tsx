@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Plus, Search, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { subscribeEntries, deleteEntry } from '@/lib/entriesService'
 import { Button } from '@/components/ui/button'
